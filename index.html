@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基于自制系列微课构建AI智慧学习平台的物理实验教学创新与实践</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a3a5f, #2c5282, #3c6ea8);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* 导航栏样式 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(26, 58, 95, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #4fd1c5, #38b2ac, #4fd1c5);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            text-shadow: 0 0 20px rgba(79, 209, 197, 0.5);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            background: linear-gradient(90deg, transparent, transparent);
+            background-size: 200% auto;
+        }
+        
+        .nav-links a:hover {
+            color: #fff;
+            background: linear-gradient(90deg, rgba(79, 209, 197, 0.2), rgba(56, 178, 172, 0.2));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 209, 197, 0.3);
+        }
+        
+        .nav-links a.active {
+            color: #4fd1c5;
+            background: rgba(79, 209, 197, 0.1);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #4fd1c5;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 80%;
+        }
+        
+        /* 主内容区域 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        /* 头部文字区域 */
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .main-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, #4fd1c5, #38b2ac, #4fd1c5, #38b2ac);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+            text-shadow: 0 0 15px rgba(79, 209, 197, 0.7), 0 0 30px rgba(79, 209, 197, 0.5);
+            line-height: 1.3;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards 0.5s, shine 4s linear infinite 1s;
+            padding: 0 20px;
+            white-space: nowrap;
+        }
+        
+        .project-subtitle {
+            font-size: 1.8rem;
+            max-width: 900px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards 1s;
+            font-weight: 500;
+            background: linear-gradient(90deg, #a0d2ff, #90cdf4, #a0d2ff, #90cdf4);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 5s linear infinite 1.5s, fadeInUp 1.5s ease forwards 1s;
+            line-height: 1.4;
+            text-shadow: 0 0 15px rgba(160, 210, 255, 0.7), 0 0 30px rgba(160, 210, 255, 0.5);
+            padding: 0 20px;
+        }
+        
+        /* 图片滚动区域 */
+        .gallery-container {
+            position: relative;
+            margin: 60px 0;
+            padding: 20px 0;
+            overflow: hidden;
+        }
+        
+        /* 胶片条 */
+        .film-strip {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background-color: #1a1a1a;
+            z-index: 5;
+            opacity: 0.9;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+        }
+        
+        .film-strip.top {
+            top: 0;
+        }
+        
+        .film-strip.bottom {
+            bottom: 0;
+        }
+        
+        /* 移动的孔洞层 */
+        .film-holes {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 40px;
+            z-index: 6;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .film-holes.top {
+            top: 0;
+        }
+        
+        .film-holes.bottom {
+            bottom: 0;
+        }
+        
+        /* 孔洞容器 - 与图片同步滚动 */
+        .holes-container {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            height: 100%;
+        }
+        
+        /* 单个孔洞样式 */
+        .hole {
+            flex: 0 0 auto;
+            width: 15px; /* 孔洞宽度 */
+            height: 20px; /* 孔洞高度 */
+            background: linear-gradient(135deg, #1a3a5f, #2c5282, #3c6ea8);
+            margin: 10px 10px; /* 上下边距10px，左右边距10px */
+            border-radius: 2px;
+        }
+        
+        .gallery {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            padding: 20px 0;
+        }
+        
+        .gallery:hover,
+        .gallery:hover ~ .film-holes .holes-container {
+            animation-play-state: paused;
+        }
+        
+        .slide {
+            flex: 0 0 auto;
+            width: 400px;
+            height: 225px;
+            margin: 0 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .slide:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 30px rgba(79, 209, 197, 0.4);
+        }
+        
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .slide:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* 播放按钮 */
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        
+        .play-button i {
+            color: white;
+            font-size: 24px;
+            margin-left: 4px;
+        }
+        
+        .slide:hover .play-button {
+            background: rgba(79, 209, 197, 0.8);
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .slide::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 60%, rgba(0, 0, 0, 0.8));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .slide:hover::after {
+            opacity: 1;
+        }
+        
+        /* 两端遮罩效果 */
+        .gallery-container::before,
+        .gallery-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .gallery-container::before {
+            left: 0;
+            background: linear-gradient(to right, 
+                rgba(26, 58, 95, 1) 0%, 
+                rgba(26, 58, 95, 0.4) 80%, 
+                rgba(26, 58, 95, 0) 100%);
+        }
+        
+        .gallery-container::after {
+            right: 0;
+            background: linear-gradient(to left, 
+                rgba(26, 58, 95, 1) 0%, 
+                rgba(26, 58, 95, 0.4) 80%, 
+                rgba(26, 58, 95, 0) 100%);
+        }
+        
+        /* 科技元素 */
+        .tech-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .floating-element {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(79, 209, 197, 0.1);
+            border-radius: 50%;
+            filter: blur(20px);
+            animation: float 15s infinite linear;
+        }
+        
+        .floating-element:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            width: 150px;
+            height: 150px;
+            animation-duration: 20s;
+        }
+        
+        .floating-element:nth-child(2) {
+            top: 70%;
+            right: 10%;
+            width: 120px;
+            height: 120px;
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+        
+        .floating-element:nth-child(3) {
+            bottom: 20%;
+            left: 15%;
+            width: 80px;
+            height: 80px;
+            animation-duration: 18s;
+            animation-delay: -10s;
+        }
+        
+        /* 动画定义 */
+        @keyframes shine {
+            to {
+                background-position: 300% center;
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-400px * 6 - 15px * 12));
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(20px, -20px) rotate(5deg);
+            }
+            50% {
+                transform: translate(0, -40px) rotate(0deg);
+            }
+            75% {
+                transform: translate(-20px, -20px) rotate(-5deg);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .main-title {
+                font-size: 2.3rem;
+                white-space: normal;
+            }
+            
+            .project-subtitle {
+                font-size: 1.5rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 5px 10px;
+            }
+            
+            .gallery-container::before,
+            .gallery-container::after {
+                width: 60px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 1.8rem;
+                white-space: normal;
+            }
+            
+            .project-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .slide {
+                width: 300px;
+                height: 169px;
+            }
+            
+            .play-button {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .play-button i {
+                font-size: 20px;
+            }
+            
+            .hole {
+                width: 12px;
+                height: 16px;
+                margin: 12px 8px;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .gallery-container::before,
+            .gallery-container::after {
+                width: 40px;
+            }
+        }
+        
+        /* 底部信息 */
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9rem;
+            color: #5a7d9a;
+            border-top: 1px solid rgba(79, 209, 197, 0.2);
+            background: rgba(26, 58, 95, 0.7);
+        }
+        
+        .school {
+            font-weight: 600;
+            color: #4fd1c5;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-atom"></i>
+                <span>科教方案类（物理实验）</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">首页</a></li>
+                <li><a href="plan-background.html">方案背景</a></li>
+                <li><a href="demand-analysis.html">需求分析</a></li>
+                <li><a href="core-practice.html">核心实践</a></li>
+                <li><a href="achievement-data.html">成果数据</a></li>
+                <li><a href="innovation.html">创新点呈现</a></li>
+                <li><a href="future-plan.html">未来计划</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 科技背景元素 -->
+    <div class="tech-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+    
+    <div class="container">
+        <!-- 主标题区域 -->
+        <div class="header">
+            <h1 class="main-title">基于自制系列微课构建AI智慧学习平台的物理实验教学创新与实践</h1>
+            <p class="project-subtitle">——以高中学业水平测试为契机的科学素养提升研究</p>
+        </div>
+        
+        <!-- 图片滚动区域 -->
+        <div class="gallery-container">
+            <!-- 固定胶片条 -->
+            <div class="film-strip top"></div>
+            <div class="film-strip bottom"></div>
+            
+            <!-- 移动的孔洞层 -->
+            <div class="film-holes top">
+                <div class="holes-container" id="top-holes-container">
+                    <!-- 孔洞将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            <div class="film-holes bottom">
+                <div class="holes-container" id="bottom-holes-container">
+                    <!-- 孔洞将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 图片滚动区域 -->
+            <div class="gallery" id="image-gallery">
+                <!-- 请将以下图片路径替换为您自己的图片路径 -->
+                <div class="slide">
+                    <img src="images/your-image1.png" alt="物理实验">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/your-image2.png" alt="AI技术">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/your-image3.png" alt="科学实验">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/your-image4.png" alt="数据分析">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/your-image5.png" alt="教学场景">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/your-image6.png" alt="学生成果">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                
+                <!-- 重复图片以实现无缝滚动 -->
+                <div class="slide">
+                    <img src="images/your-image1.png" alt="物理实验">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/your-image2.png" alt="AI技术">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/your-image3.png" alt="科学实验">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/your-image4.png" alt="数据分析">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/your-image5.png" alt="教学场景">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="slide">
+                    <img src="images/your-image6.png" alt="学生成果">
+                    <div class="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部信息 -->
+    <div class="footer">
+        <div class="school">西宁市第二中学</div>
+        <div>刘浩明</div>
+    </div>
+    
+    <script>
+        // 导航栏交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            // 只对当前页面的锚点链接添加点击效果
+            navLinks.forEach(link => {
+                // 检查链接是否是当前页面的锚点链接
+                if (link.getAttribute('href').startsWith('#')) {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // 移除所有active类
+                        navLinks.forEach(item => item.classList.remove('active'));
+                        
+                        // 添加active类到当前点击的链接
+                        this.classList.add('active');
+                    });
+                }
+            });
+            
+            // 动态生成孔洞
+            function createHoles() {
+                const topHolesContainer = document.getElementById('top-holes-container');
+                const bottomHolesContainer = document.getElementById('bottom-holes-container');
+                
+                // 计算需要多少个孔洞来填满整个滚动区域
+                // 每个图片宽度400px + 间距15px，共12张图片
+                const totalWidth = (400 + 15) * 12;
+                // 每个孔洞宽度15px + 间距10px
+                const holeWidth = 15 + 10;
+                const holesCount = Math.ceil(totalWidth / holeWidth) * 2; // 乘以2确保无缝循环
+                
+                // 清空现有孔洞
+                topHolesContainer.innerHTML = '';
+                bottomHolesContainer.innerHTML = '';
+                
+                // 创建孔洞
+                for (let i = 0; i < holesCount; i++) {
+                    const hole = document.createElement('div');
+                    hole.className = 'hole';
+                    topHolesContainer.appendChild(hole.cloneNode(true));
+                    bottomHolesContainer.appendChild(hole.cloneNode(true));
+                }
+            }
+            
+            // 初始化孔洞
+            createHoles();
+            
+            // 添加交互提示
+            const hint = document.createElement('div');
+            hint.innerHTML = '<i class="fas fa-pause"></i> 悬停暂停滚动';
+            hint.style.cssText = `
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.7);
+                padding: 8px 15px;
+                border-radius: 20px;
+                font-size: 0.8rem;
+                color: #4fd1c5;
+                z-index: 10;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+            `;
+            document.querySelector('.gallery-container').appendChild(hint);
+            
+            setTimeout(() => {
+                hint.style.opacity = '1';
+                setTimeout(() => {
+                    hint.style.opacity = '0';
+                }, 3000);
+            }, 2000);
+            
+            // 播放按钮点击效果
+            const playButtons = document.querySelectorAll('.play-button');
+            playButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 防止事件冒泡
+                    alert('播放视频功能');
+                    // 这里可以添加实际的播放视频代码
+                });
+            });
+        });
+    </script>
+</body>
+</html>
